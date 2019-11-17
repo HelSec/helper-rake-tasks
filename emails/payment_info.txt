@@ -1,0 +1,12 @@
+Hey there
+
+So you went and applied for membership of %s. We salute you! BUT, before you become a member, we need you to pay the member fee. Details are listed below.
+
+Receiver: %s
+IBAN: %s
+Amount: %s
+Reference: %s
+
+Thank you and just reply to this message if you have anything to ask :)
+
+- %s
