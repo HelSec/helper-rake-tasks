@@ -26,6 +26,7 @@ namespace :emails do
     greetings = ENV.fetch("EMAIL_GREETINGS")
     email_from = ENV.fetch("EMAIL_FROM")
     reply_to = ENV.fetch("REPLY_TO")
+    subject = ENV.fetch("SUBJECT")
 
     email_body = File.read('emails/payment_info.txt')
 
@@ -47,7 +48,7 @@ namespace :emails do
         reply_to            reply_to
         bcc                 reply_to
         to                  email_address
-        subject             "HelSec Ry. membership"
+        subject             subject
         body                content
       end
 
