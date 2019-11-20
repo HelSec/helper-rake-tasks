@@ -20,6 +20,18 @@ Install gems
 
 Create `.env.local` file and add following settings for the smtp server.
 
+    REPLY_TO=reply@example.com
+    EMAIL_FROM=sender@example.com
+    EMAIL_GREETINGS=My Name / HelSec Ry
+    MEMBER_FEE=20€
+    ACCOUNT_NUMBER=FI12 3456 7890 1234
+    ASSOCIATION=HelSec ry
+    SUBJECT=HelSec Ry. membership
+    SMTP_SERVER=smtp.example.com
+    SMTP_PORT=587
+    SMTP_USERNAME=username
+    SMTP_PASSWORD=password
+
 ## Send emails
 
 Run rake task and give csv filename as parameter
