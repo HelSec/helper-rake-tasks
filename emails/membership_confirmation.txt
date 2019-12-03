@@ -1,0 +1,10 @@
+Hey 
+
+Thank you for supporting HelSec ry! This is confirmation that we have got your application. 
+
+Your member number is %s.
+
+%s
+
+- %s
+
