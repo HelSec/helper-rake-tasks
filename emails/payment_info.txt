@@ -6,6 +6,7 @@ Receiver: %s
 IBAN: %s
 Amount: %s
 Reference: %s
+Your membernumber will be: %s
 
 Thank you and just reply to this message if you have anything to ask :)
 

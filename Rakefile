@@ -15,10 +15,11 @@ end
 
 namespace :emails do
   desc "Send payment info to members"
-  task :send_payment_info, [:filename, :email_column, :reference_column] do |t, args|
+  task :send_payment_info, [:filename, :email_column, :reference_column, :membernumber_column] do |t, args|
     filename = args.fetch(:filename)
     email_column = args.fetch(:email_column)
     reference_column = args.fetch(:reference_column)
+    membernumber_column = args.fetch(:membernumber_column)
 
     association = ENV.fetch("ASSOCIATION")
     iban = ENV.fetch("ACCOUNT_NUMBER")
@@ -33,6 +34,7 @@ namespace :emails do
     CSV.parse(File.read(filename), headers: true) do |row|
       email_address = row[email_column]
       reference = row[reference_column]
+      membernumber = row[membernumber_column].to_i
 
       content = email_body % [
         association,
@@ -40,6 +42,7 @@ namespace :emails do
         iban,
         amount,
         reference,
+        membernumber,
         greetings
       ]
 
@@ -55,6 +58,7 @@ namespace :emails do
       begin
         email.deliver!
         puts "Email sent to: #{email_address}"
+        sleep 1
       rescue => e
         puts "Failed to send email to: #{email_address}"
         puts "Reason: #{e.inspect}"
