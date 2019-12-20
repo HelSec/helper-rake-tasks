@@ -67,17 +67,21 @@ namespace :emails do
   end
 
   desc "Send confirmation/reminder email"
-  task :confirmation_mail, [:filename, :email_column, :membernumber_column, :payment_done_column,:confirmation_mail_sent_column] do |t, args|
+  task :confirmation_mail, [:filename, :email_column, :membernumber_column, :payment_done_column,:confirmation_mail_sent_column,:reference_column] do |t, args|
     filename = args.fetch(:filename)
     email_column = args.fetch(:email_column)
     membernumber_column = args.fetch(:membernumber_column)
     payment_done_column = args.fetch(:payment_done_column)
     confirmation_mail_sent_column = args.fetch(:confirmation_mail_sent_column)
+    reference_column = args.fetch(:reference_column)
 
     greetings = ENV.fetch("EMAIL_GREETINGS")
     email_from = ENV.fetch("EMAIL_FROM")
     reply_to = ENV.fetch("REPLY_TO")
     subject = ENV.fetch("SUBJECT")
+    iban = ENV.fetch("ACCOUNT_NUMBER")
+    amount = ENV.fetch("MEMBER_FEE")
+    association = ENV.fetch("ASSOCIATION")
 
     email_body = File.read('emails/membership_confirmation.txt')
 
@@ -86,6 +90,7 @@ namespace :emails do
       membernumber = row[membernumber_column].to_i
       payment_done = (row[payment_done_column] || "").strip.downcase
       confirmation_mail_sent = (row[confirmation_mail_sent_column] || "").strip.downcase
+      reference = row[reference_column]
 
       next if "x" == confirmation_mail_sent
 
@@ -100,6 +105,13 @@ namespace :emails do
         else
           additional_content += "Please do the payment in reasonable time. If you have just got the payment info within last few weeks, don't worry, this is just an semi-automated reminder :)"
         end
+
+        additional_content += "\r\n\r\nHere's the payment info:\r\n" +
+                              "Receiver: #{association}\r\n" +
+                              "IBAN: #{iban}\r\n" +
+                              "Amount: #{amount}\r\n" +
+                              "Reference: #{reference}"
+
       end
 
       content = email_body % [
