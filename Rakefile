@@ -67,11 +67,12 @@ namespace :emails do
   end
 
   desc "Send confirmation/reminder email"
-  task :confirmation_mail, [:filename, :email_column, :membernumber_column, :payment_done_column,] do |t, args|
+  task :confirmation_mail, [:filename, :email_column, :membernumber_column, :payment_done_column,:confirmation_mail_sent_column] do |t, args|
     filename = args.fetch(:filename)
     email_column = args.fetch(:email_column)
     membernumber_column = args.fetch(:membernumber_column)
     payment_done_column = args.fetch(:payment_done_column)
+    confirmation_mail_sent_column = args.fetch(:confirmation_mail_sent_column)
 
     greetings = ENV.fetch("EMAIL_GREETINGS")
     email_from = ENV.fetch("EMAIL_FROM")
@@ -84,6 +85,9 @@ namespace :emails do
       email_address = row[email_column]
       membernumber = row[membernumber_column].to_i
       payment_done = (row[payment_done_column] || "").strip.downcase
+      confirmation_mail_sent = (row[confirmation_mail_sent_column] || "").strip.downcase
+
+      next if "x" == confirmation_mail_sent
 
       additional_content = ""
       additional_content += "As you are one of the first 100 members, you will get a special members-only sticker. You can get the sticker from meetups by talking to whois. If you are eager to to wait, you can contact us and pick up the sticker from Keilaranta 15. \r\n\r\n" if membernumber < 104
@@ -94,7 +98,7 @@ namespace :emails do
         if membernumber < 104
           additional_content += "Please do the payment in reasonable time. Otherwise we might consider to move you outside of the first 100 member and your sticker will get someone else who has already paid their member fee."
         else
-          additional_content += "Please do the payment in reasonable time. "
+          additional_content += "Please do the payment in reasonable time. If you have just got the payment info within last few weeks, don't worry, this is just an semi-automated reminder :)"
         end
       end
 
