@@ -82,6 +82,7 @@ namespace :emails do
     iban = ENV.fetch("ACCOUNT_NUMBER")
     amount = ENV.fetch("MEMBER_FEE")
     association = ENV.fetch("ASSOCIATION")
+    type = ""
 
     email_body = File.read('emails/membership_confirmation.txt')
 
@@ -98,7 +99,9 @@ namespace :emails do
       additional_content += "As you are one of the first 100 members, you will get a special members-only sticker. You can get the sticker from meetups by talking to whois. If you are eager to to wait, you can contact us and pick up the sticker from Keilaranta 15. \r\n\r\n" if membernumber < 104
       if "x" == payment_done
         additional_content += "We have got your payment so you are all set."
+        type = "confirmed"
       else
+        type = "reminder"
         additional_content += "We haven't got your payment yet. "
         if membernumber < 104
           additional_content += "Please do the payment in reasonable time. Otherwise we might consider to move you outside of the first 100 member and your sticker will get someone else who has already paid their member fee."
@@ -131,7 +134,7 @@ namespace :emails do
 
       begin
         email.deliver!
-        puts "Email sent to: #{email_address}"
+        puts "Email[#{type}] sent to: #{email_address}"
         sleep 1
       rescue => e
         puts "Failed to send email to: #{email_address}"
